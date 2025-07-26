@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>aimelo</title>
+  <style>
+    body {
+  font-family: sans-serif;
+  padding: 3em;
+  background-color: #c6dc92;
+  text-align: center;
+  color: #8da065;
+}
+
+h1 {
+  margin-bottom: 0.5em;
+  font-size: 2.5em;
+  font-weight: normal;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin-bottom: 1em;
+}
+
+.heading-icon {
+  width: 50px;
+  height: auto;
+  margin-left: 125px;
+  transform: rotate(90deg);
+}
+
+
+.heading-flex {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between; /* 👈 pushes icon to far right */
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 550px;
+  margin: 0 auto 1em;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.header-left {
+  font-size: 2em;
+  font-weight: normal;
+  margin: 0;
+  color: #8da065;
+}
+
+.header-right {
+  width: 50px;
+  height: auto;
+  transform: rotate(90deg);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.header-right:hover {
+  transform: scale(1.05);
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.badge-restart {
+  border: none;
+  border-radius: 8px;  
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #db93ae;
+}
+
+.badge-restart:hover {
+  background-color: #e797b3;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.input-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 2em;
+}
+
+textarea {
+  width: 100%;
+  max-width: 250px;
+  height: 125px;
+  font-size: 1em;
+  padding: 0.5em;
+  border-radius: 8px;
+  border: none;
+  background-color: #f2ecd5;
+  color: #24788a;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.generate-btn {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.generate-btn button {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 8px;
+  background-color: #ccf8ff;
+  color: #81cdd8;
+  font-size: 1em;
+  font-weight: normal;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.generate-btn button:hover {
+  background-color: #81cdd8;
+  color: #ffffff;
+}
+
+#promptInput:focus {
+  outline: none;
+  border: none;
+}
+
+#promptInput {
+  height: 125px;
+  max-length: 240;
+}
+
+#melodyInput {
+  outline: none;
+  border: none;
+}
+
+/* Unified button group layout */
+.tempo-controls,
+.wave-row,
+.duration-controls,
+.division-controls,
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.5em;
+  margin-top: 1em;
+}
+
+.tempo-btn,
+.wave-btn,
+.duration-btn,
+.division-btn,
+.transport-btn {
+  padding: 0.5em 1em;
+  width: 90px;
+  height: 50px;
+  font-size: 1em;
+  font-weight: normal;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: center;
+}
+
+/* Tempo buttons */
+.tempo-btn {
+  background-color: #ccf8ff;
+  color: #8bc6cf;
+}
+
+.tempo-btn:hover {
+  background-color: #81cdd8;
+  color: #fff;
+}
+
+/* Tempo display */
+#tempoDisplay {
+  font-size: 1.2em;
+  width: 190px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #81cdd8;
+  border-radius: 6px;
+  font-weight: normal;
+  color: #ffffff;
+}
+
+/* Wave buttons */
+.wave-btn {
+  background-color: #f2e1a0;
+  color: #ebc83a;
+}
+
+.wave-btn.active {
+  background-color: #ebc83a;
+  color: #ffffff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Duration buttons */
+.duration-btn {
+  background-color: #ffe2ec;
+  color: #e797b3;
+}
+
+.duration-btn.active {
+  background-color: #f8bbd0;
+  color: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Division buttons */
+.division-btn {
+  background-color: #ccf8ff;
+  color: #67a8b2;
+}
+
+.division-btn.active {
+  background-color: #79c6d1;
+  color: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Transport buttons */
+.transport-btn {
+  background-color: #8da065;
+  color: #656735;
+}
+
+.transport-btn:hover {
+  background-color: #db93ae;
+  color: #ffffff;
+}
+
+.transport-btn.active {
+  background-color: #e797b3;
+  color: #ffffff;
+  font-weight: normal;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+#playBtn,
+#loopBtn {
+  width: 190px;
+}
+
+@media (max-width: 430px) {
+  .input-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+    .transport-btn {
+    background-color: #8da065;
+    color: #656735;
+  }
+
+  .transport-btn.active {
+    background-color: pink;
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  }
+
+  .generate-btn {
+    width: 100%;
+    height: auto;
+    margin-top: 1em;
+  }
+
+  .generate-btn button {
+    width: 100%;
+    height: 50px;
+  }
+}
+
+
+  </style>
+</head>
+<body>
+  
+<div class="header-row">
+  <h1 class="header-left">a i m e l o</h1>
+  <img src="assets/aimeloH.png" alt="Icon" class="header-right" onclick="openGuide()" title="aimeloHelp">
+</div>
+
+
+<div class="input-row">
+  <textarea id="promptInput" maxlength="240" placeholder="Describe your melody (max 240 characters)"></textarea>
+  <div class="generate-btn">
+    <button onclick="generateMelody()">ai</button>
+  </div>
+  <textarea id="melodyInput" placeholder="Generated or manual melody > notes = C3 C#3 & rests = / separated by space"></textarea>
+</div>
+
+<div class="header">
+  <button class="badge-restart" onclick="restartSession()"></button>
+  <img src="assets/aimelo.png" alt="Logo" class="logo" id="downloadLogo" />
+</div>
+
+  <div class="tempo-controls">
+    <button class="tempo-btn" onclick="changeTempo(-10)">–</button>
+    <div id="tempoDisplay">130</div>
+    <button class="tempo-btn" onclick="changeTempo(10)">+</button>
+  </div>
+
+  <div class="wave-row">
+    <button id="wave1" class="wave-btn" onclick="setMorph(0.0, 'wave1')">O</button>
+    <button id="wave2" class="wave-btn" onclick="setMorph(0.16, 'wave2')">O</button>
+    <button id="wave3" class="wave-btn" onclick="setMorph(0.33, 'wave3')">O</button>
+    <button id="wave4" class="wave-btn" onclick="setMorph(0.5, 'wave4')">O</button>
+  </div>
+
+  <div class="duration-controls">
+    <button class="duration-btn" id="dur02" onclick="setNoteDuration(0.2, 'dur02')">0.2s</button>
+    <button class="duration-btn" id="dur04" onclick="setNoteDuration(0.4, 'dur04')">0.4s</button>
+    <button class="duration-btn" id="dur08" onclick="setNoteDuration(0.8, 'dur08')">0.8s</button>
+    <button class="duration-btn" id="dur12" onclick="setNoteDuration(1.2, 'dur12')">1.2s</button>
+  </div>
+
+  <div class="division-controls">
+    <button class="division-btn" id="div4" onclick="setDivision(4, 'div4')">1/4</button>
+    <button class="division-btn" id="div8" onclick="setDivision(8, 'div8')">1/8</button>
+    <button class="division-btn" id="div16" onclick="setDivision(16, 'div16')">1/16</button>
+    <button class="division-btn" id="div32" onclick="setDivision(32, 'div32')">1/32</button>
+  </div>
+
+  <div class="controls">
+    <button id="playBtn" class="transport-btn" onclick="playMelody()">▶</button>
+    <button id="loopBtn" class="transport-btn" onclick="toggleLoop()">oo</button>
+  </div>
+
+<script>
+
+const noteFrequencies = {
+  "C": 261.63, "C#": 277.18, "Db": 277.18,
+  "D": 293.66, "D#": 311.13, "Eb": 311.13,
+  "E": 329.63, "F": 349.23, "F#": 369.99,
+  "Gb": 369.99, "G": 392.00, "G#": 415.30,
+  "Ab": 415.30, "A": 440.00, "A#": 466.16,
+  "Bb": 466.16, "B": 493.88
+};
+
+async function generateMelody() {
+  const prompt = document.getElementById("promptInput").value.trim();
+  if (!prompt) return;
+
+  try {
+    const response = await fetch("/generate-melody", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ prompt })
+    });
+
+    const data = await response.json();
+
+    if (!data.melody) {
+      throw new Error("No melody received from server");
+    }
+
+    const cleaned = data.melody
+      .split("\n")
+      .map(line => line.trim())
+      .filter(line => line.length > 0)
+      .join(" ");
+
+    document.getElementById("melodyInput").value = cleaned;
+
+  } catch (error) {
+    console.error("Error generating melody:", error);
+    alert("Failed to generate melody. Please try again.");
+  }
+}
+
+
+let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let masterGain = audioCtx.createGain();
+masterGain.gain.value = 0.05;
+masterGain.connect(audioCtx.destination);
+
+let delayNode = audioCtx.createDelay();
+let feedbackGain = audioCtx.createGain();
+let reverbGain = audioCtx.createGain();
+let dryGain = audioCtx.createGain();
+
+delayNode.delayTime.value = 0.3;
+feedbackGain.gain.value = 0.7;
+reverbGain.gain.value = 1.0;
+dryGain.gain.value = 0.3;
+
+delayNode.connect(feedbackGain);
+feedbackGain.connect(delayNode);
+delayNode.connect(reverbGain);
+reverbGain.connect(masterGain);
+dryGain.connect(masterGain);
+
+let activeNodes = [];
+let loopTimeout = null;
+let looping = false;
+let tempo = 130;
+let division = 4;
+let noteDuration = 0.5;
+let currentWaveform = "sine";
+
+function setDivision(value, buttonId) {
+  division = value;
+  document.querySelectorAll(".division-btn").forEach(btn => btn.classList.remove("active"));
+  document.getElementById(buttonId).classList.add("active");
+}
+
+function updateTempoDisplay() {
+  document.getElementById("tempoDisplay").textContent = `${tempo}`;
+}
+
+function changeTempo(change) {
+  tempo = Math.max(30, Math.min(500, tempo + change));
+  updateTempoDisplay();
+}
+
+function setMorph(value, buttonId) {
+  if (value === 0.0) currentWaveform = "sine";
+  else if (value === 0.16) currentWaveform = "triangle";
+  else if (value === 0.33) currentWaveform = "square";
+  else if (value === 0.5) currentWaveform = "sawtooth";
+
+  document.querySelectorAll(".wave-btn").forEach(btn => btn.classList.remove("active"));
+  document.getElementById(buttonId).classList.add("active");
+}
+
+function setNoteDuration(value, buttonId) {
+  noteDuration = value;
+  document.querySelectorAll(".duration-btn").forEach(btn => btn.classList.remove("active"));
+  document.getElementById(buttonId).classList.add("active");
+}
+
+function activateTransport(id) {
+  ["playBtn", "stopBtn"].forEach(btnId => {
+    const btn = document.getElementById(btnId);
+    if (btn) btn.classList.remove("active");
+  });
+  const target = document.getElementById(id);
+  if (target) target.classList.add("active");
+}
+
+function toggleLoop() {
+  looping = !looping;
+  const loopBtn = document.getElementById("loopBtn");
+  loopBtn.classList.toggle("active", looping);
+
+  if (!looping) {
+    // Cancel any scheduled loop
+    if (loopTimeout) {
+      clearTimeout(loopTimeout);
+      loopTimeout = null;
+
+      // Estimate when the current melody ends and schedule stop
+      const input = document.getElementById("melodyInput");
+      const raw = input.value.trim();
+      if (raw) {
+        const tokens = raw.replace(/\n/g, " ").split(/\s+/);
+        const secondsPerBeat = 60 / tempo;
+        const noteSpacing = secondsPerBeat * (4 / division);
+        const totalTime = tokens.length * noteSpacing;
+
+        setTimeout(() => {
+          stopOscillators(); // will deactivate play button
+        }, totalTime * 1000);
+      }
+    }
+  }
+}
+
+function getFrequency(noteStr) {
+  const pitch = noteStr.slice(0, -1);
+  const octave = parseInt(noteStr.slice(-1));
+  const base = noteFrequencies[pitch];
+  return base ? base * Math.pow(2, octave - 4) : null;
+}
+
+function playNote(freq, duration, startTime) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  const delay = audioCtx.createDelay();
+  const feedback = audioCtx.createGain();
+
+  osc.type = currentWaveform;
+  osc.frequency.value = freq;
+
+  gain.gain.setValueAtTime(0.08, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+
+  delay.delayTime.value = 0.25;
+  feedback.gain.value = 0.4;
+  delay.connect(feedback);
+  feedback.connect(delay);
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  gain.connect(delay);
+  delay.connect(audioCtx.destination);
+
+  osc.start(startTime);
+  osc.stop(startTime + duration);
+  activeNodes.push(osc);
+}
+
+function stopOscillators() {
+  activeNodes.forEach(src => { try { src.stop(); } catch {} });
+  activeNodes = [];
+
+  if (loopTimeout) {
+    clearTimeout(loopTimeout);
+    loopTimeout = null;
+  }
+
+  // Deactivate play button if not looping
+  if (!looping) {
+    document.getElementById("playBtn").classList.remove("active");
+  }
+}
+
+function playMelody() {
+  const playBtn = document.getElementById("playBtn");
+  playBtn.classList.add("active");
+  scheduleMelody();
+}
+
+
+function stopMelody() {
+  const playBtn = document.getElementById("playBtn");
+  playBtn.classList.remove("active");
+  stopOscillators();
+}
+
+
+function scheduleMelody() {
+  stopOscillators(); // stops current notes and clears previous loop
+
+  function loopPass() {
+    const input = document.getElementById("melodyInput");
+    const raw = input.value.trim();
+    if (!raw) return;
+
+    const tokens = raw.replace(/\n/g, " ").split(/\s+/);
+    let now = audioCtx.currentTime;
+
+    const secondsPerBeat = 60 / tempo;
+    const noteSpacing = secondsPerBeat * (4 / division);
+    const duration = noteDuration; // ensures clean timing
+
+    tokens.forEach((word) => {
+      const isRest = word === "/" || word.toLowerCase() === "rest";
+      const freq = isRest ? null : getFrequency(word);
+      if (freq) playNote(freq, duration, now);
+      now += noteSpacing;
+    });
+
+    const totalTime = now - audioCtx.currentTime;
+
+    if (looping) {
+      loopTimeout = setTimeout(loopPass, totalTime * 1000);
+    } else {
+      // Melody ends naturally, stop oscillators and deactivate play button
+      setTimeout(() => {
+        stopOscillators(); // this will also remove playBtn active state
+      }, totalTime * 1000);
+    }
+  }
+
+  loopPass();
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  updateTempoDisplay();
+  setMorph(0.0, "wave1");
+  setDivision(4, "div4");
+  setNoteDuration(0.5, "dur02");
+  document.getElementById("loopBtn").classList.remove("active");
+
+  // ⌨️ Trigger melody generation on Enter key
+  document.getElementById("promptInput").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault(); // prevent newline
+      generateMelody();
+    }
+  });
+});
+
+function openGuide() {
+  const guideWindow = window.open(
+    'aimeloHelp.html',
+    'LayoutGuide',
+    'width=800,height=800,toolbar=no,resizable=yes'
+  );
+}
+
+function restartSession() {
+  location.reload();
+}
+</script>
+
+ <script>
+    document.getElementById("downloadLogo").addEventListener("click", function () {
+      const promptText = document.getElementById("promptInput").value.trim();
+      const melodyText = document.getElementById("melodyInput").value.trim();
+
+      const combinedText = `Prompt:\n${promptText}\n\nMelody:\n${melodyText}`;
+      const blob = new Blob([combinedText], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "aimelo.txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  </script>
+
+  </body>
+
